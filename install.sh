@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # ==============================================
-# KONFIGURASI
+# KONFIGURASI UTAMA
 # ==============================================
-REPO_OWNER="xjunznaire"
-REPO_NAME="Auto-Installer-Theme-Pterodactyl"
+REPO_OWNER="ZenCloudID"
+REPO_NAME="install-private"
 REPO_URL="https://github.com/$REPO_OWNER/$REPO_NAME"
 RAW_URL="https://raw.githubusercontent.com/$REPO_OWNER/$REPO_NAME/main"
 TEMP_DIR="/tmp/ptero_installer_$(date +%s)"
@@ -77,66 +77,52 @@ install_deps() {
   fi
 }
 
-# Fungsi untuk menginstal dependensi untuk Nebula dan Elysium
-install_depend() {
+# Fungsi untuk menginstal tema Stellar
+install_stellar_theme() {
     echo -e "                                                       "
     echo -e "${GREEN}[+] =============================================== [+]${NC}"
-    echo -e "${GREEN}[+]           INSTALL NODE.JS & BLUEPRINT           [+]${NC}"
-    echo -e "${GREEN}[+] =============================================== [+]${NC}"
-    echo -e "                                                       "
-
-    # Install dependensi dasar
-    sudo apt-get install -y ca-certificates curl gnupg
-    sudo mkdir -p /etc/apt/keyrings
-
-    # Menambahkan kunci repositori Node.js
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-
-    # Menambahkan sumber paket Node.js versi 20.x
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
-
-    # Memperbarui daftar paket dan menginstal Node.js
-    sudo apt-get update
-    sudo apt-get install -y nodejs
-    npm i -g yarn
-
-    # Navigasi ke direktori Pterodactyl
-    cd /var/www/pterodactyl
-
-    # Menginstal dependensi dengan Yarn
-    yarn
-    yarn add cross-env
-
-    # Install dependensi tambahan
-    sudo apt install -y zip unzip git curl wget
-
-    # Mengunduh Blueprint Framework versi terbaru
-    wget "$(curl -s https://api.github.com/repos/BlueprintFramework/framework/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4)" -O release.zip
-
-    # Memindahkan dan mengekstrak file release
-    mv release.zip /var/www/pterodactyl/release.zip
-    cd /var/www/pterodactyl
-    unzip release.zip
-
-    # Konfigurasi permission dan eksekusi blueprint.sh
-    WEBUSER="www-data"
-    USERSHELL="/bin/bash"
-    PERMISSIONS="www-data:www-data"
-
-    sed -i -E -e "s|WEBUSER=\"www-data\" #;|WEBUSER=\"$WEBUSER\" #;|g" \
-               -e "s|USERSHELL=\"/bin/bash\" #;|USERSHELL=\"$USERSHELL\" #;|g" \
-               -e "s|OWNERSHIP=\"www-data:www-data\" #;|OWNERSHIP=\"$PERMISSIONS\" #;|g" blueprint.sh
-
-    chmod +x blueprint.sh
-    bash blueprint.sh
-
-    echo -e "                                                       "
-    echo -e "${GREEN}[+] =============================================== [+]${NC}"
-    echo -e "${GREEN}[+]        INSTALLASI NODE.JS & BLUEPRINT SELESAI   [+]${NC}"
+    echo -e "${GREEN}[+]                INSTALASI STELLAR THEME                 [+]${NC}"
     echo -e "${GREEN}[+] =============================================== [+]${NC}"
     echo -e "                                                       "
 
-    sleep 2
+    wget -O /var/www/stellar.zip "$RAW_URL/stellar.zip" || die "Gagal mendownload Stellar Theme"
+    unzip -o /var/www/stellar.zip -d /var/www/
+    rm -f /var/www/stellar.zip
+
+    echo -e "${GREEN}[+]           STELLAR THEME BERHASIL DIINSTALL          [+]${NC}"
+    echo -e "                                                       "
+}
+
+# Fungsi untuk menginstal tema Billing
+install_billing_theme() {
+    echo -e "                                                       "
+    echo -e "${GREEN}[+] =============================================== [+]${NC}"
+    echo -e "${GREEN}[+]                INSTALASI BILLING THEME                 [+]${NC}"
+    echo -e "${GREEN}[+] =============================================== [+]${NC}"
+    echo -e "                                                       "
+
+    wget -O /var/www/billing.zip "$RAW_URL/billing.zip" || die "Gagal mendownload Billing Theme"
+    unzip -o /var/www/billing.zip -d /var/www/
+    rm -f /var/www/billing.zip
+
+    echo -e "${GREEN}[+]           BILLING THEME BERHASIL DIINSTALL          [+]${NC}"
+    echo -e "                                                       "
+}
+
+# Fungsi untuk menginstal tema Enigma
+install_enigma_theme() {
+    echo -e "                                                       "
+    echo -e "${GREEN}[+] =============================================== [+]${NC}"
+    echo -e "${GREEN}[+]                INSTALASI ENIGMA THEME                 [+]${NC}"
+    echo -e "${GREEN}[+] =============================================== [+]${NC}"
+    echo -e "                                                       "
+
+    wget -O /var/www/enigma.zip "$RAW_URL/enigma.zip" || die "Gagal mendownload Enigma Theme"
+    unzip -o /var/www/enigma.zip -d /var/www/
+    rm -f /var/www/enigma.zip
+
+    echo -e "${GREEN}[+]           ENIGMA THEME BERHASIL DIINSTALL          [+]${NC}"
+    echo -e "                                                       "
 }
 
 # Fungsi untuk menginstal tema Nebula
@@ -147,42 +133,12 @@ install_nebula_theme() {
     echo -e "${GREEN}[+] =============================================== [+]${NC}"
     echo -e "                                                       "
 
-    local BLUEPRINT_FILE="/var/www/pterodactyl/blueprint.sh"
-    
-    if [ ! -f "$BLUEPRINT_FILE" ]; then
-        echo "𝗗𝗘𝗣𝗘𝗡𝗗 𝗣𝗟𝗨𝗚𝗜𝗡𝗦 𝗕𝗘𝗟𝗨𝗠 𝗗𝗜𝗜𝗡𝗦𝗧𝗔𝗟. 𝗦𝗜𝗟𝗔𝗛𝗞𝗔𝗡 𝗜𝗡𝗦𝗧𝗔𝗟𝗟 𝗗𝗘𝗡𝗚𝗔𝗡 𝗢𝗣𝗦𝗜 𝗡𝗢 𝟭𝟭"
-        exit 1
-    fi
-
-    # URL Repositori (gunakan HTTPS tanpa autentikasi)
-    local REPO_URL="https://github.com/xjunznaire/Auto-Installer-Theme-Pterodactyl.git"
-    local TEMP_DIR="Autoinstaller-Theme-Pterodactyl"
-
-    echo -e "${BLUE}🔄 Mengkloning repositori...${NC}"
-    git clone --depth=1 "$REPO_URL"
-
-    if [ ! -d "$TEMP_DIR" ]; then
-        echo -e "${RED}❌ Gagal mengkloning repositori.${NC}"
-        exit 1
-    fi
-
-    echo -e "${BLUE}📦 Memindahkan dan mengekstrak file...${NC}"
-    mv "$TEMP_DIR/nebulaptero.zip" /var/www/
+    wget -O /var/www/nebulaptero.zip "$RAW_URL/nebulaptero.zip" || die "Gagal mendownload Nebula Theme"
     unzip -o /var/www/nebulaptero.zip -d /var/www/
+    rm -f /var/www/nebulaptero.zip
 
-    echo -e "${BLUE}⚙️ Menginstal blueprint...${NC}"
-    cd /var/www/pterodactyl && blueprint -install nebula
-
-    echo -e "${BLUE}🧹 Membersihkan file sementara...${NC}"
-    rm -rf "$TEMP_DIR" "/var/www/nebulaptero.zip" "/var/www/pterodactyl/nebula.blueprint"
-
-    echo -e "                                                       "
-    echo -e "${GREEN}[+] =============================================== [+]${NC}"
     echo -e "${GREEN}[+]           NEBULA THEME BERHASIL DIINSTALL          [+]${NC}"
-    echo -e "${GREEN}[+] =============================================== [+]${NC}"
     echo -e "                                                       "
-    
-    sleep 2
 }
 
 # Fungsi untuk menginstal tema Elysium
@@ -193,31 +149,75 @@ install_elysium_theme() {
     echo -e "${GREEN}[+] =============================================== [+]${NC}"
     echo -e "                                                       "
 
-    # Menginstal Tema Elysium
-    REPO_URL="https://github.com/xjunznaire/Auto-Installer-Theme-Pterodactyl.git"
-    TEMP_DIR="Autoinstaller-Theme-Pterodactyl"
-
-    git clone "$REPO_URL" "$TEMP_DIR" || { echo "Gagal mengkloning repositori."; exit 1; }
-
-    # Menyimpan dan mengekstrak file ZIP
-    sudo mv "$TEMP_DIR/ElysiumTheme.zip" /var/www/
+    wget -O /var/www/ElysiumTheme.zip "$RAW_URL/ElysiumTheme.zip" || die "Gagal mendownload Elysium Theme"
     unzip -o /var/www/ElysiumTheme.zip -d /var/www/
-    rm -rf "$TEMP_DIR" /var/www/ElysiumTheme.zip
+    rm -f /var/www/ElysiumTheme.zip
 
-    # Install Node.js dan Yarn
-    install_depend
+    echo -e "${GREEN}[+]          ELYSIUM THEME BERHASIL DIINSTALL       [+]${NC}"
+    echo -e "                                                       "
+}
 
-    # Navigasi ke direktori Pterodactyl
-    cd /var/www/pterodactyl
-    yarn
-    yarn build:production
-    php artisan migrate
-    php artisan view:clear
-
+# Fungsi untuk mengalokasikan node
+install_node_allocation() {
     echo -e "                                                       "
     echo -e "${GREEN}[+] =============================================== [+]${NC}"
-    echo -e "${GREEN}[+]          ELYSIUM THEME BERHASIL DIINSTALL       [+]${NC}"
+    echo -e "${GREEN}[+]             INSTALLASI NODE ALLOCATION           [+]${NC}"
     echo -e "${GREEN}[+] =============================================== [+]${NC}"
+    echo -e "                                                       "
+
+    wget -O /var/www/alocation.sh "$RAW_URL/alocation.sh" || die "Gagal mendownload alocation.sh"
+    chmod +x /var/www/alocation.sh
+    bash /var/www/alocation.sh
+
+    echo -e "${GREEN}[+]        NODE ALLOCATION BERHASIL DIINSTALL       [+]${NC}"
+    echo -e "                                                       "
+}
+
+# Fungsi untuk membuat node baru
+create_new_node() {
+    echo -e "                                                       "
+    echo -e "${GREEN}[+] =============================================== [+]${NC}"
+    echo -e "${GREEN}[+]             MEMBUAT NODE BARU                   [+]${NC}"
+    echo -e "${GREEN}[+] =============================================== [+]${NC}"
+    echo -e "                                                       "
+
+    wget -O /var/www/createnode.sh "$RAW_URL/createnode.sh" || die "Gagal mendownload createnode.sh"
+    chmod +x /var/www/createnode.sh
+    bash /var/www/createnode.sh
+
+    echo -e "${GREEN}[+]        NODE BARU BERHASIL DIBUAT                [+]${NC}"
+    echo -e "                                                       "
+}
+
+# Fungsi untuk melindungi admin user
+protect_admin_user() {
+    echo -e "                                                       "
+    echo -e "${GREEN}[+] =============================================== [+]${NC}"
+    echo -e "${GREEN}[+]             MELINDUNGI ADMIN USER                [+]${NC}"
+    echo -e "${GREEN}[+] =============================================== [+]${NC}"
+    echo -e "                                                       "
+
+    wget -O /var/www/protectadminuser.sh "$RAW_URL/protectadminuser.sh" || die "Gagal mendownload protectadminuser.sh"
+    chmod +x /var/www/protectadminuser.sh
+    bash /var/www/protectadminuser.sh
+
+    echo -e "${GREEN}[+]        ADMIN USER BERHASIL DILINDUNGI            [+]${NC}"
+    echo -e "                                                       "
+}
+
+# Fungsi untuk memperbaiki panel Pterodactyl
+repair_panel() {
+    echo -e "                                                       "
+    echo -e "${GREEN}[+] =============================================== [+]${NC}"
+    echo -e "${GREEN}[+]             MEMPERBAIKI PANEL PTERODACTYL        [+]${NC}"
+    echo -e "${GREEN}[+] =============================================== [+]${NC}"
+    echo -e "                                                       "
+
+    wget -O /var/www/repair.sh "$RAW_URL/repair.sh" || die "Gagal mendownload repair.sh"
+    chmod +x /var/www/repair.sh
+    bash /var/www/repair.sh
+
+    echo -e "${GREEN}[+]        PANEL PTERODACTYL BERHASIL DIPERBAIKI     [+]${NC}"
     echo -e "                                                       "
 }
 
@@ -233,22 +233,36 @@ main_menu() {
     echo -e "${NC}"
     echo -e "${BLUE}=============================================${NC}" | lolcat
     echo -e " Versi Script : 2.0.0"
-    echo -e " Dibuat oleh  : xjunznaire" | lolcat  
+    echo -e " Dibuat oleh  : ZenCloudID" | lolcat  
     echo -e "${BLUE}=============================================${NC}" | lolcat
     echo -e " Pilihan:"
     echo -e " 1. Install Dependencies"
-    echo -e " 2. Install Nebula Theme"
-    echo -e " 3. Install Elysium Theme"
-    echo -e " 4. Keluar"
+    echo -e " 2. Install Stellar Theme"
+    echo -e " 3. Install Billing Theme"
+    echo -e " 4. Install Enigma Theme"
+    echo -e " 5. Install Nebula Theme"
+    echo -e " 6. Install Elysium Theme"
+    echo -e " 7. Install Node Allocation"
+    echo -e " 8. Create New Node"
+    echo -e " 9. Protect Admin User"
+    echo -e " 10. Repair Pterodactyl Panel"
+    echo -e " 11. Keluar"
     echo -e "${BLUE}=============================================${NC}" | lolcat
-    echo -ne " Pilih menu [1-4]: "
+    echo -ne " Pilih menu [1-11]: "
     read -r choice
 
     case $choice in
-      1) install_depend ;;
-      2) install_nebula_theme ;;
-      3) install_elysium_theme ;;
-      4) 
+      1) install_deps ;;
+      2) install_stellar_theme ;;
+      3) install_billing_theme ;;
+      4) install_enigma_theme ;;
+      5) install_nebula_theme ;;
+      6) install_elysium_theme ;;
+      7) install_node_allocation ;;
+      8) create_new_node ;;
+      9) protect_admin_user ;;
+      10) repair_panel ;;
+      11) 
         msg "${GREEN}[✓] Keluar dari installer...${NC}" | lolcat
         cleanup
         exit 0
@@ -303,7 +317,6 @@ main() {
 
   # Validasi
   check_internet
-  install_deps
 
   # Jalankan menu utama
   main_menu
