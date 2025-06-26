@@ -16,7 +16,7 @@ bash <(curl -s https://raw.githubusercontent.com/xjunznaire/Auto-Installer-Theme
 | ---------------- | ------- | ------------------ |
 | Ubuntu           | 20.04   | :white_check_mark: |
 |                  | 22.04   | :white_check_mark: |
-|                  | 24.04   |
+|                  | 24.04   | ✅
 | Debian           | 10      | :white_check_mark: |
 |                  | 11      | :white_check_mark: |
 |                  | 12      | :white_check_mark: |
