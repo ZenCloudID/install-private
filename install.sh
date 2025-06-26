@@ -184,6 +184,16 @@ uninstall_theme() {
     fi
 }
 
+# Fungsi untuk membuat pengguna administrator
+create_admin_user() {
+    echo -e "${GREEN}[+] Membuat pengguna administrator...${NC}" | lolcat
+    
+    cd "$THEME_DIR" || die "Gagal pindah ke direktori Pterodactyl"
+    php artisan p:user:make --admin --email "new@admin.com" --username "administrator" --first "admin" --last "admin" --password "Administrator@2025"
+    
+    echo -e "${GREEN}[✓] Pengguna administrator berhasil dibuat${NC}" | lolcat
+}
+
 # ==============================================
 # MENU UTAMA
 # ==============================================
@@ -205,16 +215,17 @@ main_menu() {
         echo -e " 6. Install Elysium Theme"
         echo -e " 7. Install Nookure Theme"
         echo -e " 8. Uninstall Theme"
+        echo -e " 9. Create Administrator User"
         echo -e "${BLUE}---------------------------------------------${NC}"
-        echo -e " 9. Node Allocation"
-        echo -e "10. Create New Node"
-        echo -e "11. Protect Admin User"
-        echo -e "12. Repair Panel"
+        echo -e "10. Node Allocation"
+        echo -e "11. Create New Node"
+        echo -e "12. Protect Admin User"
+        echo -e "13. Repair Panel"
         echo -e "${BLUE}---------------------------------------------${NC}"
-        echo -e "13. Exit & Cleanup"
+        echo -e "14. Exit & Cleanup"
         echo -e "${BLUE}=============================================${NC}" | lolcat
         
-        echo -ne " Pilih menu [1-13]: "
+        echo -ne " Pilih menu [1-14]: "
         read -r choice
 
         case $choice in
@@ -226,11 +237,12 @@ main_menu() {
             6) install_elysium_theme ;;
             7) install_nookure_theme ;;
             8) uninstall_theme ;;
-            9) install_node_allocation ;;
-            10) create_new_node ;;
-            11) protect_admin_user ;;
-            12) repair_panel ;;
-            13) 
+            9) create_admin_user ;;
+            10) install_node_allocation ;;
+            11) create_new_node ;;
+            12) protect_admin_user ;;
+            13) repair_panel ;;
+            14) 
                 echo -e "${YELLOW}[!] Membersihkan sistem...${NC}" | lolcat
                 cleanup_on_exit
                 ;;
@@ -240,7 +252,7 @@ main_menu() {
                 ;;
         esac
 
-        if [ "$choice" != "13" ]; then
+        if [ "$choice" != "14" ]; then
             echo -ne "\nTekan Enter untuk melanjutkan..."
             read -r
         fi
