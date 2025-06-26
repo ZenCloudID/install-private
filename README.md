@@ -7,7 +7,7 @@
 ## Command Install :
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/ZenCloudID/install-private/tree/main/install.sh)
+bash <(curl -s https://raw.githubusercontent.com/ZenCloudID/install-private/main/Run.sh)
 ```
 
 ## System Support :
