@@ -7,7 +7,7 @@
 ## Command Install :
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/xjunznaire/Auto-Installer-Theme-Pterodactyl/main/install.sh)
+bash <(curl -s https://raw.githubusercontent.com/ZenCloudID/install-private/tree/main/install.sh)
 ```
 
 ## System Support :
