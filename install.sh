@@ -184,14 +184,34 @@ uninstall_theme() {
     fi
 }
 
-# Fungsi untuk membuat pengguna administrator
-create_admin_user() {
-    echo -e "${GREEN}[+] Membuat pengguna administrator...${NC}" | lolcat
+# Fungsi untuk membuat pengguna administrator secara otomatis
+create_admin_user_auto() {
+    echo -e "${GREEN}[+] Membuat pengguna administrator secara otomatis...${NC}" | lolcat
     
     cd "$THEME_DIR" || die "Gagal pindah ke direktori Pterodactyl"
-    php artisan p:user:make --admin --email "new@admin.com" --username "administrator" --first "admin" --last "admin" --password "Administrator@2025"
+    php artisan p:user:make --admin --email "new@admin.com" --username "administrator" --password "Administrator@2025"
     
     echo -e "${GREEN}[✓] Pengguna administrator berhasil dibuat${NC}" | lolcat
+}
+
+# Fungsi untuk membuat pengguna administrator secara manual
+create_admin_user_manual() {
+    echo -e "${GREEN}[+] Membuat pengguna administrator secara manual...${NC}" | lolcat
+    
+    cd "$THEME_DIR" || die "Gagal pindah ke direktori Pterodactyl"
+    php artisan p:user:make
+    
+    echo -e "${GREEN}[✓] Pengguna administrator berhasil dibuat${NC}" | lolcat
+}
+
+# Fungsi untuk memeriksa pengguna administrator
+check_admin_user() {
+    echo -e "${GREEN}[+] Memeriksa pengguna administrator...${NC}" | lolcat
+    
+    # Menampilkan daftar pengguna
+    php artisan p:user:list
+    
+    echo -e "${GREEN}[✓] Daftar pengguna administrator ditampilkan di atas${NC}" | lolcat
 }
 
 # ==============================================
@@ -215,17 +235,19 @@ main_menu() {
         echo -e " 6. Install Elysium Theme"
         echo -e " 7. Install Nookure Theme"
         echo -e " 8. Uninstall Theme"
-        echo -e " 9. Create Administrator User"
+        echo -e " 9. Create Administrator User (Auto)"
+        echo -e "10. Create Administrator User (Manual)"
+        echo -e "11. Check User Administrator"
         echo -e "${BLUE}---------------------------------------------${NC}"
-        echo -e "10. Node Allocation"
-        echo -e "11. Create New Node"
-        echo -e "12. Protect Admin User"
-        echo -e "13. Repair Panel"
+        echo -e "12. Node Allocation"
+        echo -e "13. Create New Node"
+        echo -e "14. Protect Admin User"
+        echo -e "15. Repair Panel"
         echo -e "${BLUE}---------------------------------------------${NC}"
-        echo -e "14. Exit & Cleanup"
+        echo -e "16. Exit & Cleanup"
         echo -e "${BLUE}=============================================${NC}" | lolcat
         
-        echo -ne " Pilih menu [1-14]: "
+        echo -ne " Pilih menu [1-16]: "
         read -r choice
 
         case $choice in
@@ -237,12 +259,14 @@ main_menu() {
             6) install_elysium_theme ;;
             7) install_nookure_theme ;;
             8) uninstall_theme ;;
-            9) create_admin_user ;;
-            10) install_node_allocation ;;
-            11) create_new_node ;;
-            12) protect_admin_user ;;
-            13) repair_panel ;;
-            14) 
+            9) create_admin_user_auto ;;
+            10) create_admin_user_manual ;;
+            11) check_admin_user ;;
+            12) install_node_allocation ;;
+            13) create_new_node ;;
+            14) protect_admin_user ;;
+            15) repair_panel ;;
+            16) 
                 echo -e "${YELLOW}[!] Membersihkan sistem...${NC}" | lolcat
                 cleanup_on_exit
                 ;;
@@ -252,7 +276,7 @@ main_menu() {
                 ;;
         esac
 
-        if [ "$choice" != "14" ]; then
+        if [ "$choice" != "16" ]; then
             echo -ne "\nTekan Enter untuk melanjutkan..."
             read -r
         fi
